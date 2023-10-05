@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>测试缓存</title>
+	</head>
+	<body>
+		<script>
+			var validSecond = 10;
+			function downtimeFunction() {
+				validSecond --;
+				
+				document.getElementById("timerTip").innerHTML = `缓存有效期:${validSecond}s`;
+
+				let code = validSecond > 0 ? "304" : "200";
+				document.getElementById("retCodeTip").innerHTML = `刷新返回 code = ${code}`;
+				
+				if (validSecond <= 0) {
+					clearTimer();
+				}
+			}
+
+			let validTimer = null;
+			function resetTimeInterval() {
+				clearTimer();
+
+				validTimer = setInterval(downtimeFunction, 1000);
+			}
+			resetTimeInterval();
+
+			function clearTimer() {
+				if (validTimer) {
+					clearInterval(validTimer);
+					validTimer = null;
+				}
+			}
+
+			setTimeout(function() {
+				document.getElementById("forceCacheTitle").innerHTML = `测试强制缓存，有效期${validSecond}s`;
+			}, 10);
+		</script>
+		<h2 id="timerTip">缓存有效期:10s，</h2>
+		<hr />
+		<h3 id="forceCacheTitle">测试强制缓存</h3>
+		<img src="./example.png" width="50" />
+		<hr />
+		<h3>测试协商缓存</h3>
+		<p id="retCodeTip">刷新返回 code = 304</p>
+		<img src="./example1.png" width="50" />
+		<hr />
+	</body>
+</html>
